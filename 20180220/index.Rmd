@@ -287,7 +287,7 @@ background-image: url(rstudio.svg)
 background-size: 100px
 background-position: 95% 5%
 
-### For example, editing markers
+### Responding to circle shape edits
 
 ```{r, echo = FALSE}
 include_vimeo("318338029")
@@ -300,7 +300,7 @@ background-image: url(rstudio.svg)
 background-size: 100px
 background-position: 95% 5%
 
-### For example, editing lines
+### Responding to line shape edits
 
 ```{r, echo = FALSE}
 include_vimeo("318341222")
@@ -313,7 +313,7 @@ background-image: url(rstudio.svg)
 background-size: 100px
 background-position: 95% 5%
 
-### For example, editing a brush
+### A draggable brush via rect shape edits
 
 ```{r, echo = FALSE}
 include_vimeo("318330112")
