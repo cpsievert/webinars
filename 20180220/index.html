@@ -224,39 +224,9 @@ shinyApp(ui, server)
 background-image: url(rstudio.svg)
 background-size: 100px
 background-position: 95% 5%
+class: inverse, middle, center
 
-### Also, the lesser known relayout
-
-Very powerful in combination with (editable) [layout.shapes](https://plot.ly/r/reference/#layout-shapes)!
-
-.pull-left[
-```r
-library(shiny)
-
-ui &lt;- fluidPage(
-  plotlyOutput("plot"),
-  verbatimTextOutput("relayout")
-)
-
-server &lt;- function(input, output) {
-  output$plot &lt;- renderPlotly({
-    plot_ly(y = diamonds$depth) %&gt;%
-      add_annotations(x = 1000, y = 70, text = "Peak!") %&gt;%
-*     config(editable = TRUE, displayModeBar = FALSE, showTips = FALSE)
-  })
-  output$relayout &lt;- renderPrint({
-*   event_data("plotly_relayout")
-  })
-}
-
-shinyApp(ui, server)
-```
-]
-
-.pull-right[
- &lt;img src="plotly-events-relayout.gif" width="100%" &gt;
-]
-
+## Very powerful in combination with (editable) [layout.shapes](https://plot.ly/r/reference/#layout-shapes)!
 
 ---
 background-image: url(rstudio.svg)

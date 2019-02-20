@@ -249,39 +249,9 @@ include_vimeo("318506969", width="500")
 background-image: url(rstudio.svg)
 background-size: 100px
 background-position: 95% 5%
+class: inverse, middle, center
 
-### Also, the lesser known relayout
-
-Very powerful in combination with (editable) [layout.shapes](https://plot.ly/r/reference/#layout-shapes)!
-
-.pull-left[
-```r
-library(shiny)
-
-ui <- fluidPage(
-  plotlyOutput("plot"),
-  verbatimTextOutput("relayout")
-)
-
-server <- function(input, output) {
-  output$plot <- renderPlotly({
-    plot_ly(y = diamonds$depth) %>%
-      add_annotations(x = 1000, y = 70, text = "Peak!") %>%
-*     config(editable = TRUE, displayModeBar = FALSE, showTips = FALSE)
-  })
-  output$relayout <- renderPrint({
-*   event_data("plotly_relayout")
-  })
-}
-
-shinyApp(ui, server)
-```
-]
-
-.pull-right[
- <img src="plotly-events-relayout.gif" width="100%" >
-]
-
+## Very powerful in combination with (editable) [layout.shapes](https://plot.ly/r/reference/#layout-shapes)!
 
 ---
 background-image: url(rstudio.svg)
