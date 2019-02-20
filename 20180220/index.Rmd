@@ -240,7 +240,9 @@ shinyApp(ui, server)
 ]
 
 .pull-right[
- <img src="plotly-events-relayout.gif" width="100%" >
+```{r, echo = FALSE}
+include_vimeo("318506969", width="500")
+```
 ]
 
 ---
@@ -389,7 +391,7 @@ background-position: 95% 5%
 include_vimeo("318129502")
 ```
 
-[View hosted app](https://testing-apps.shinyapps.io/crossfilter/) and run locally with: `plotly_example("shiny", "crossfilter")`.
+[App](https://testing-apps.shinyapps.io/crossfilter/) / [Code](https://github.com/ropensci/plotly/blob/master/inst/examples/shiny/crossfilter/app.R) / [Video](https://vimeo.com/318129502)
 
 This approach scales to about 5 million on my laptop -- could scale to much more with an optimized database.
 
