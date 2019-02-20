@@ -16,7 +16,7 @@ output:
       navigation:
         scroll: false
 author: "Carson Sievert <br> Software Engineer, RStudio <br> February 20th, 2018"
-date: 'Slides: https://webinars.cpsievert.me <br> <br>  `r icon::fa_twitter()` <a href="https://twitter.com/cpsievert">@cpsievert</a> <br> `r icon::fa_github()` <a href="https://github.com/cpsievert">@cpsievert</a> <br> `r icon::fa_envelope()` <cpsievert1@gmail.com> <br /> `r icon::fa_globe()` <https://cpsievert.me/> <br> <br> Slides released under <a href="https://github.com/cpsievert/talks/blob/gh-pages/LICENSE">Creative Commons</a>'
+date: 'Slides: http://bit.ly/shiny-plotly <br> <br>  `r icon::fa_twitter()` <a href="https://twitter.com/cpsievert">@cpsievert</a> <br> `r icon::fa_github()` <a href="https://github.com/cpsievert">@cpsievert</a> <br> `r icon::fa_envelope()` <cpsievert1@gmail.com> <br /> `r icon::fa_globe()` <https://cpsievert.me/> <br> <br> Slides released under <a href="https://github.com/cpsievert/talks/blob/gh-pages/LICENSE">Creative Commons</a>'
 ---
 background-image: url(rstudio.svg)
 background-size: 100px
@@ -73,7 +73,7 @@ class: middle, center
 Code examples require latest GitHub version of **plotly** (CRAN release in March).
 
 ```r
-devtools::install_github("ropensci/plotly")
+remotes::install_github("ropensci/plotly")
 ```
 
 ---
@@ -93,21 +93,6 @@ plot_ly(diamonds, x = ~cut, color = ~clarity, colors = "Accent")
 ```{r, echo = FALSE}
 include_vimeo("315707813")
 ```
-
----
-background-image: url(rstudio.svg)
-background-size: 100px
-background-position: 95% 5%
-
-### Make your ggplots interactive!
-
-```r
-p <- ggplot(diamonds, aes(price, stat(density), colour = cut)) +
-  geom_freqpoly(binwidth = 500)
-ggplotly(p, tooltip = "density")
-```
-
-<img src="ggplotly.gif" width="100%" >
 
 ---
 background-image: url(rstudio.svg)
@@ -152,7 +137,7 @@ background-image: url(rstudio.svg)
 background-size: 100px
 background-position: 95% 5%
 
-### Shiny inputs vs outputs
+### Shiny inputs trigger R code to execute, which generates new output
 
 .pull-left[
 ```r
@@ -190,7 +175,7 @@ background-image: url(rstudio.svg)
 background-size: 100px
 background-position: 95% 5%
 
-### Some outputs can be treated like an input!
+### Some outputs can act like an input!
 
 .pull-left[
 ```r
@@ -270,6 +255,8 @@ background-position: 95% 5%
 
 ### Also, the lesser known relayout
 
+Very powerful in combination with (editable) [layout.shapes](https://plot.ly/r/reference/#layout-shapes)!
+
 .pull-left[
 ```r
 library(shiny)
@@ -298,6 +285,47 @@ shinyApp(ui, server)
  <img src="plotly-events-relayout.gif" width="100%" >
 ]
 
+
+
+---
+background-image: url(rstudio.svg)
+background-size: 100px
+background-position: 95% 5%
+
+### For example, editing markers
+
+```{r, echo = FALSE}
+include_vimeo("318338029")
+```
+
+[Code](https://github.com/ropensci/plotly/blob/master/inst/examples/shiny/drag_markers/app.R) / [video](https://vimeo.com/318338029)
+
+---
+background-image: url(rstudio.svg)
+background-size: 100px
+background-position: 95% 5%
+
+### For example, editing lines
+
+```{r, echo = FALSE}
+include_vimeo("318341222")
+```
+
+[Code](https://github.com/ropensci/plotly/blob/master/inst/examples/shiny/drag_lines/app.R) / [video](https://vimeo.com/318341222)
+
+---
+background-image: url(rstudio.svg)
+background-size: 100px
+background-position: 95% 5%
+
+### For example, editing a brush
+
+```{r, echo = FALSE}
+include_vimeo("318330112")
+```
+
+[Code](https://github.com/ropensci/plotly/blob/master/inst/examples/shiny/drag_brush/app.R) / [video](https://vimeo.com/318330112)
+
 ---
 background-image: url(rstudio.svg)
 background-size: 100px
@@ -315,7 +343,7 @@ background-position: 95% 5%
 * <font color="#37538F"><i>Blue events</i></font> are currently available on GitHub (CRAN release coming soon)
 
 ```r
-devtools::install_github("ropensci/plotly")
+remotes::install_github("ropensci/plotly")
 ```
 
 
@@ -714,7 +742,7 @@ dep_time <- flights$dep_time
 * I'm using **ggstat** because `bin_fixed()` is quite fast and simple.
 
   * **ggstat** currently only on [GitHub]() (use with caution)
-  * [Binning with **data.table**](https://www.r-bloggers.com/using-data-table-for-binning/) comparable, but slower and complicated.
+  * [Binning with **data.table**](https://www.r-bloggers.com/using-data-table-for-binning/) is comparable, but slightly slower and more complicated.
   * Feel free to suggest better alternative for fast histogram binning!
 
 
@@ -796,11 +824,11 @@ server <- function(input, output) {
     p <- plotlyProxy("dep_time")
     
     if (is.null(brush)) {
-      plotlyProxyInvoke(p, "restyle", "y", list(dep_stats$count_), 0)
+      plotlyProxyInvoke(p, "restyle", "y", list(dep_stats$count_))
     } else {
       dep_time_filter <- dep_time[between(dep_time, brush$x[1], brush$x[2])]
       dep_count <- compute_stat(dep_bins, dep_time_filter)$count_
-      plotlyProxyInvoke(p, "restyle", "y", list(dep_count), 0)
+      plotlyProxyInvoke(p, "restyle", "y", list(dep_count))
     }
   })
 }
@@ -828,11 +856,11 @@ server <- function(input, output) {
     brush <- event_data("plotly_brushing", source = "arr_time")
     p <- plotlyProxy("dep_time")
     if (is.null(brush)) {
-      plotlyProxyInvoke(p, "restyle", "y", list(dep_stats$count_), 0)
+      plotlyProxyInvoke(p, "restyle", "y", list(dep_stats$count_))
     } else {
       dep_time_filter <- dep_time[between(dep_time, brush$x[1], brush$x[2])]
       dep_count <- compute_stat(dep_bins, dep_time_filter)$count_
-      plotlyProxyInvoke(p, "restyle", "y", list(dep_count), 0)
+      plotlyProxyInvoke(p, "restyle", "y", list(dep_count))
     }
   })
 }
@@ -859,11 +887,11 @@ server <- function(input, output) {
 *   brush <- event_data("plotly_brushing", source = "arr_time")
 *   p <- plotlyProxy("dep_time")
     if (is.null(brush)) {
-      plotlyProxyInvoke(p, "restyle", "y", list(dep_stats$count_), 0)
+      plotlyProxyInvoke(p, "restyle", "y", list(dep_stats$count_))
     } else {
       dep_time_filter <- dep_time[between(dep_time, brush$x[1], brush$x[2])]
       dep_count <- compute_stat(dep_bins, dep_time_filter)$count_
-      plotlyProxyInvoke(p, "restyle", "y", list(dep_count), 0)
+      plotlyProxyInvoke(p, "restyle", "y", list(dep_count))
     }
   })
 }
@@ -890,11 +918,11 @@ server <- function(input, output) {
     brush <- event_data("plotly_brushing", source = "arr_time")
     p <- plotlyProxy("dep_time")
     if (is.null(brush)) {
-*     plotlyProxyInvoke(p, "restyle", "y", list(dep_stats$count_), 0)
+*     plotlyProxyInvoke(p, "restyle", "y", list(dep_stats$count_))
     } else {
       dep_time_filter <- dep_time[between(dep_time, brush$x[1], brush$x[2])]
       dep_count <- compute_stat(dep_bins, dep_time_filter)$count_
-      plotlyProxyInvoke(p, "restyle", "y", list(dep_count), 0)
+      plotlyProxyInvoke(p, "restyle", "y", list(dep_count))
     }
   })
 }
@@ -922,11 +950,11 @@ server <- function(input, output) {
     brush <- event_data("plotly_brushing", source = "arr_time")
     p <- plotlyProxy("dep_time")
     if (is.null(brush)) {
-      plotlyProxyInvoke(p, "restyle", "y", list(dep_stats$count_), 0)
+      plotlyProxyInvoke(p, "restyle", "y", list(dep_stats$count_))
     } else {
 *     dep_time_filter <- dep_time[between(dep_time, brush$x[1], brush$x[2])]
 *     dep_count <- compute_stat(dep_bins, dep_time_filter)$count_
-*     plotlyProxyInvoke(p, "restyle", "y", list(dep_count), 0)
+*     plotlyProxyInvoke(p, "restyle", "y", list(dep_count))
     }
   })
 }
@@ -1005,7 +1033,7 @@ background-position: 95% 5%
 
 #### `event_data()` now supports more plotly.js events, including 'continuous' ones  like `"plotly_brushing"`
 
-  * Currently available on GitHub `devtools::install_github("ropensci/plotly")`
+  * Currently available on GitHub `remotes::install_github("ropensci/plotly")`
   
 #### Continous events, like `"plotly_brushing"`, require fast updates
 
@@ -1017,19 +1045,35 @@ background-position: 95% 5%
     
 #### Get inspired by and reuse examples
 
-* `plotly_example("shiny", "crossfilter")` [code](https://github.com/ropensci/plotly/tree/master/inst/examples/shiny/crossfilter)/[video](https://vimeo.com/318129502)
-* `plotly_example("shiny", "crossfilter_scatter")` [code](https://github.com/ropensci/plotly/tree/master/inst/examples/shiny/crossfilter_scatter)/[video](https://vimeo.com/318129005)
-* `plotly_example("shiny", "crossfilter_kde")` [code](https://github.com/ropensci/plotly/tree/master/inst/examples/shiny/crossfilter_kde)/[video](https://vimeo.com/318122403)
-* `plotly_example("shiny", "crossfilter_compare")` [code](https://github.com/ropensci/plotly/tree/master/inst/examples/shiny/crossfilter_compare)/[video](https://vimeo.com/307598246)
+* `plotly_example("shiny", "crossfilter")` [code](https://github.com/ropensci/plotly/tree/master/inst/examples/shiny/crossfilter) / [video](https://vimeo.com/318129502)
+* `plotly_example("shiny", "crossfilter_scatter")` [code](https://github.com/ropensci/plotly/tree/master/inst/examples/shiny/crossfilter_scatter) / [video](https://vimeo.com/318129005)
+* `plotly_example("shiny", "crossfilter_kde")` [code](https://github.com/ropensci/plotly/tree/master/inst/examples/shiny/crossfilter_kde) / [video](https://vimeo.com/318122403)
+* `plotly_example("shiny", "crossfilter_compare")` [code](https://github.com/ropensci/plotly/tree/master/inst/examples/shiny/crossfilter_compare) / [video](https://vimeo.com/307598246)
 
 ---
 background-image: url(rstudio.svg)
-background-size: 100px
-background-position: 95% 5%
+background-size: 90%
+class: principles, center
 
-## Help me help you
+## Thanks for listening! Questions?
 
-<img src="tom-cruise.gif" width="100%" >
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 
-* I'm still learning about best practices and patterns for linking large data visualizations responsively. 
-* Please do share your experiences and let me know where the rough edges are.
+Slides <http://bit.ly/shiny-plotly> <br>
+`r icon::fa_twitter()` <a href="https://twitter.com/cpsievert">@cpsievert</a> <br>
+`r icon::fa_github()` <a href="https://github.com/cpsievert">@cpsievert</a> <br>
+`r icon::fa_envelope()` <cpsievert1@gmail.com> <br>
+`r icon::fa_globe()` <https://cpsievert.me/>
+
+

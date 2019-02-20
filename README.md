@@ -1,6 +1,6 @@
-# talks
+# webinars
 
-Slides for various talks I've given. You can browse them on the homepage -- <http://cpsievert.github.io/talks> 
+Slides for various webinars I've given. You can browse them on the homepage -- <http://webinars.cpsievert.me> 
 
 ## Note to self
 
