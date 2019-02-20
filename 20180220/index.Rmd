@@ -27,8 +27,8 @@ class: principles
 
 * Started at RStudio in September 2018
   * Member of the **shiny** team
+  * New edition of [plotly for R book](https://plotly-book.cpsievert.me) coming very soon!
   * Maintaining the **plotly** R package
-  * 2nd edition of [plotly for R book](https://plotly-book.cpsievert.me) coming very soon!
 
 * Previously freelance consultant
   * Maintained **plotly** R package (since 2015)
@@ -82,7 +82,7 @@ background-position: 95% 5%
 
 ### About plotly
 
-* The R package **plotly** provides R binding the the (MIT-licensed) JavaScript library [plotly.js](https://github.com/plotly/plotly.js).
+* The R package **plotly** provides R bindings to the (MIT-licensed) JavaScript library [plotly.js](https://github.com/plotly/plotly.js).
 
 ```r
 library(plotly)
