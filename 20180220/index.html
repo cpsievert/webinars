@@ -15,7 +15,7 @@ class: center, middle, inverse, title-slide
 
 # Accessing and responding to plotly events in shiny
 ### Carson Sievert <br> Software Engineer, RStudio <br> February 20th, 2018
-### Slides: <a href="http://bit.ly/shiny-plotly" class="uri">http://bit.ly/shiny-plotly</a> <br> <br> <i class="fab  fa-twitter "></i> <a href="https://twitter.com/cpsievert"><span class="citation">@cpsievert</span></a> <br> <i class="fab  fa-github "></i> <a href="https://github.com/cpsievert"><span class="citation">@cpsievert</span></a> <br> <i class="fas  fa-envelope "></i> <a href="mailto:cpsievert1@gmail.com" class="email">cpsievert1@gmail.com</a> <br /> <i class="fas  fa-globe "></i> <a href="https://cpsievert.me/" class="uri">https://cpsievert.me/</a> <br> <br> Slides released under <a href="https://github.com/cpsievert/talks/blob/gh-pages/LICENSE">Creative Commons</a>
+### Slides: <a href="https://bit.ly/shiny-plotly" class="uri">https://bit.ly/shiny-plotly</a> <br> <br> <i class="fab  fa-twitter "></i> <a href="https://twitter.com/cpsievert"><span class="citation">@cpsievert</span></a> <br> <i class="fab  fa-github "></i> <a href="https://github.com/cpsievert"><span class="citation">@cpsievert</span></a> <br> <i class="fas  fa-envelope "></i> <a href="mailto:cpsievert1@gmail.com" class="email">cpsievert1@gmail.com</a> <br /> <i class="fas  fa-globe "></i> <a href="https://cpsievert.me/" class="uri">https://cpsievert.me/</a> <br> <br> Slides released under <a href="https://github.com/cpsievert/talks/blob/gh-pages/LICENSE">Creative Commons</a>
 
 ---
 
@@ -108,45 +108,6 @@ shinyApp(ui, server)
 &lt;img src="shiny-plotly-y.gif" width="100%" &gt;
 ]
 
-
----
-background-image: url(rstudio.svg)
-background-size: 100px
-background-position: 95% 5%
-
-### Shiny inputs trigger R code to execute, which generates new output
-
-.pull-left[
-```r
-library(shiny)
-
-ui &lt;- fluidPage(
-* selectInput(
-*   "y", "Choose a variable", 
-*   choices = names(diamonds)
-* ),
-  plotlyOutput("p")
-)
-
-server &lt;- function(input, output) {
-
-  output$p &lt;- renderPlotly({
-    plot_ly(
-*     y = diamonds[[input$y]]
-    )
-  })
-  
-}
-
-shinyApp(ui, server)
-```
-]
-
-.pull-right[
-&lt;img src="shiny-plotly-y.png" width="100%" &gt;
-]
-
-
 ---
 background-image: url(rstudio.svg)
 background-size: 100px
@@ -232,6 +193,41 @@ background-position: 95% 5%
 
 ### Also, the lesser known relayout
 
+.pull-left[
+```r
+library(shiny)
+
+ui &lt;- fluidPage(
+  plotlyOutput("plot"),
+  verbatimTextOutput("relayout")
+)
+
+server &lt;- function(input, output) {
+  output$plot &lt;- renderPlotly({
+    plot_ly(y = diamonds$depth) %&gt;%
+      add_annotations(x = 1000, y = 70, text = "Peak!") %&gt;%
+*     config(editable = TRUE, displayModeBar = FALSE, showTips = FALSE)
+  })
+  output$relayout &lt;- renderPrint({
+*   event_data("plotly_relayout")
+  })
+}
+
+shinyApp(ui, server)
+```
+]
+
+.pull-right[
+ &lt;img src="plotly-events-relayout.gif" width="100%" &gt;
+]
+
+---
+background-image: url(rstudio.svg)
+background-size: 100px
+background-position: 95% 5%
+
+### Also, the lesser known relayout
+
 Very powerful in combination with (editable) [layout.shapes](https://plot.ly/r/reference/#layout-shapes)!
 
 .pull-left[
@@ -261,7 +257,6 @@ shinyApp(ui, server)
 .pull-right[
  &lt;img src="plotly-events-relayout.gif" width="100%" &gt;
 ]
-
 
 
 ---
@@ -641,7 +636,7 @@ server &lt;- function(input, output) {
 
 1. Full draw performed only once (on page load).
 2. Every 100 milliseconds, re-run the `observe()` expression.
-3. Invoke a plotly.js [restyle](https://plot.ly/javascript/plotlyjs-function-reference/#plotlyrestyle) on the (`bars`) output with three new random values for the bar heights.
+3. Invoke a plotly.js [restyle](https://plot.ly/javascript/plotlyjs-function-reference/#plotlyrestyle) on `"bars"` output with three new random values for the heights.
 
 ---
 background-image: url(rstudio.svg)
@@ -941,8 +936,6 @@ background-position: 95% 5%
 
 * _This is hard_, can you make it easier for us?
   * Maybe someday -- I want to focus on finding, [documenting](https://plotly-book.cpsievert.me/), and teaching useful patterns first
-  
-* Concepts covered here and the (upcoming) plotly book can be reused in *many* ways
 
 ---
 background-image: url(rstudio.svg)
@@ -1025,7 +1018,7 @@ class: principles, center
 &lt;br&gt;
 &lt;br&gt;
 
-Slides &lt;http://bit.ly/shiny-plotly&gt; &lt;br&gt;
+Slides &lt;https://bit.ly/shiny-plotly&gt; &lt;br&gt;
 <i class="fab  fa-twitter "></i> &lt;a href="https://twitter.com/cpsievert"&gt;@cpsievert&lt;/a&gt; &lt;br&gt;
 <i class="fab  fa-github "></i> &lt;a href="https://github.com/cpsievert"&gt;@cpsievert&lt;/a&gt; &lt;br&gt;
 <i class="fas  fa-envelope "></i> &lt;cpsievert1@gmail.com&gt; &lt;br&gt;

@@ -16,7 +16,7 @@ output:
       navigation:
         scroll: false
 author: "Carson Sievert <br> Software Engineer, RStudio <br> February 20th, 2018"
-date: 'Slides: http://bit.ly/shiny-plotly <br> <br>  `r icon::fa_twitter()` <a href="https://twitter.com/cpsievert">@cpsievert</a> <br> `r icon::fa_github()` <a href="https://github.com/cpsievert">@cpsievert</a> <br> `r icon::fa_envelope()` <cpsievert1@gmail.com> <br /> `r icon::fa_globe()` <https://cpsievert.me/> <br> <br> Slides released under <a href="https://github.com/cpsievert/talks/blob/gh-pages/LICENSE">Creative Commons</a>'
+date: 'Slides: https://bit.ly/shiny-plotly <br> <br>  `r icon::fa_twitter()` <a href="https://twitter.com/cpsievert">@cpsievert</a> <br> `r icon::fa_github()` <a href="https://github.com/cpsievert">@cpsievert</a> <br> `r icon::fa_envelope()` <cpsievert1@gmail.com> <br /> `r icon::fa_globe()` <https://cpsievert.me/> <br> <br> Slides released under <a href="https://github.com/cpsievert/talks/blob/gh-pages/LICENSE">Creative Commons</a>'
 ---
 background-image: url(rstudio.svg)
 background-size: 100px
@@ -131,45 +131,6 @@ shinyApp(ui, server)
 <img src="shiny-plotly-y.gif" width="100%" >
 ]
 
-
----
-background-image: url(rstudio.svg)
-background-size: 100px
-background-position: 95% 5%
-
-### Shiny inputs trigger R code to execute, which generates new output
-
-.pull-left[
-```r
-library(shiny)
-
-ui <- fluidPage(
-* selectInput(
-*   "y", "Choose a variable", 
-*   choices = names(diamonds)
-* ),
-  plotlyOutput("p")
-)
-
-server <- function(input, output) {
-
-  output$p <- renderPlotly({
-    plot_ly(
-*     y = diamonds[[input$y]]
-    )
-  })
-  
-}
-
-shinyApp(ui, server)
-```
-]
-
-.pull-right[
-<img src="shiny-plotly-y.png" width="100%" >
-]
-
-
 ---
 background-image: url(rstudio.svg)
 background-size: 100px
@@ -255,6 +216,41 @@ background-position: 95% 5%
 
 ### Also, the lesser known relayout
 
+.pull-left[
+```r
+library(shiny)
+
+ui <- fluidPage(
+  plotlyOutput("plot"),
+  verbatimTextOutput("relayout")
+)
+
+server <- function(input, output) {
+  output$plot <- renderPlotly({
+    plot_ly(y = diamonds$depth) %>%
+      add_annotations(x = 1000, y = 70, text = "Peak!") %>%
+*     config(editable = TRUE, displayModeBar = FALSE, showTips = FALSE)
+  })
+  output$relayout <- renderPrint({
+*   event_data("plotly_relayout")
+  })
+}
+
+shinyApp(ui, server)
+```
+]
+
+.pull-right[
+ <img src="plotly-events-relayout.gif" width="100%" >
+]
+
+---
+background-image: url(rstudio.svg)
+background-size: 100px
+background-position: 95% 5%
+
+### Also, the lesser known relayout
+
 Very powerful in combination with (editable) [layout.shapes](https://plot.ly/r/reference/#layout-shapes)!
 
 .pull-left[
@@ -284,7 +280,6 @@ shinyApp(ui, server)
 .pull-right[
  <img src="plotly-events-relayout.gif" width="100%" >
 ]
-
 
 
 ---
@@ -678,7 +673,7 @@ server <- function(input, output) {
 
 1. Full draw performed only once (on page load).
 2. Every 100 milliseconds, re-run the `observe()` expression.
-3. Invoke a plotly.js [restyle](https://plot.ly/javascript/plotlyjs-function-reference/#plotlyrestyle) on the (`bars`) output with three new random values for the bar heights.
+3. Invoke a plotly.js [restyle](https://plot.ly/javascript/plotlyjs-function-reference/#plotlyrestyle) on `"bars"` output with three new random values for the heights.
 
 ---
 background-image: url(rstudio.svg)
@@ -980,8 +975,6 @@ background-position: 95% 5%
 
 * _This is hard_, can you make it easier for us?
   * Maybe someday -- I want to focus on finding, [documenting](https://plotly-book.cpsievert.me/), and teaching useful patterns first
-  
-* Concepts covered here and the (upcoming) plotly book can be reused in *many* ways
 
 ---
 background-image: url(rstudio.svg)
@@ -1070,7 +1063,7 @@ class: principles, center
 <br>
 <br>
 
-Slides <http://bit.ly/shiny-plotly> <br>
+Slides <https://bit.ly/shiny-plotly> <br>
 `r icon::fa_twitter()` <a href="https://twitter.com/cpsievert">@cpsievert</a> <br>
 `r icon::fa_github()` <a href="https://github.com/cpsievert">@cpsievert</a> <br>
 `r icon::fa_envelope()` <cpsievert1@gmail.com> <br>
